@@ -35,7 +35,9 @@ jobs:
           bundler-cache: true
 
       - name: Lint code for consistent style
-        run: bin/rubocop -f github
+        run: |
+          # Please resolve lint error by `bin/rubocop -a` and re-commit
+          bin/rubocop -f github
 
   test:
     runs-on: ubuntu-latest
