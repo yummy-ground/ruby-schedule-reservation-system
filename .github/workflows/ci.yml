@@ -68,6 +68,9 @@ jobs:
       - name: Run tests
         env:
           RAILS_ENV: test
-          DATABASE_URL: postgres://postgres:postgres@localhost:5432
-          # REDIS_URL: redis://localhost:6379/0
+          DB_NAME: schedule_reservation_system_test
+          DB_HOST: localhost
+          DB_USERNAME: postgres
+          DB_PASSWORD: postgres
+          DB_PORT: 5432
         run: bin/rails db:test:prepare test

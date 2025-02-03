@@ -2,19 +2,18 @@ default: &default
   adapter: postgresql
   encoding: unicode
   pool: 5
-
-development:
-  <<: *default
-  database: <%= ENV["DB_NAME"] || "schedule_reservation_system" %>
   host: <%= ENV["DB_HOST"] || "localhost" %>
   port: <%= ENV["DB_PORT"] || 5432 %>
   username: <%= ENV["DB_USERNAME"] %>
   password: <%= ENV["DB_PASSWORD"] %>
 
-  min_messages: log
+development:
+  <<: *default
+  database: <%= ENV["DB_NAME"] || "schedule_reservation_system" %>
+  min_messages: error
 
 test:
   <<: *default
   database: <%= ENV["DB_NAME"] || "schedule_reservation_system_test" %>
-  min_message: error
+  min_message: log
 
