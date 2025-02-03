@@ -1,0 +1,4 @@
+development:
+  secret: ${JWT_SECRET}
+test:
+  secret: ${JWT_SECRET}
