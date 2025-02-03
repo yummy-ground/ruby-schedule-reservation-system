@@ -10,10 +10,10 @@ default: &default
 development:
   <<: *default
   database: <%= ENV["DB_NAME"] || "schedule_reservation_system" %>
-  min_messages: error
+  min_messages: log
 
 test:
   <<: *default
   database: <%= ENV["DB_NAME"] || "schedule_reservation_system_test" %>
-  min_message: log
+  min_message: error
 
