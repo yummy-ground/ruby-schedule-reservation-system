@@ -48,4 +48,6 @@ group :development, :test do
   gem "dotenv-rails", groups: [ :development, :test ]
 
   gem "jwt"
+  gem "rswag", "~> 2.10", ">= 2.10.1"
+  gem "rswag-specs", require: false
 end
