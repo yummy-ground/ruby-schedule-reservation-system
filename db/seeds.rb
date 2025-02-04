@@ -1,16 +1,3 @@
-require "jwt"
-
-def generate_static_jwt(user_id, role)
-  payload = {
-    id: user_id,
-    role: role,
-    iat: Time.now.to_i,
-    exp: Time.now.to_i + (24 * 60 * 60)
-  }
-  secret = ENV["JWT_SECRET"]
-  JWT.encode(payload, secret, 'HS256')
-end
-
 if User.table_exists?
   puts "> User table already exists"
   ActiveRecord::Base.connection.execute("TRUNCATE TABLE users RESTART IDENTITY CASCADE")
@@ -45,8 +32,4 @@ Schedule.create!([
                    { id: 9, user_id: 4, personnel: 10000, start_datetime: "2025-02-24 10:00:00", end_datetime: "2025-02-25 10:00:00", is_confirm: true  }
                  ])
 puts "> Schedule dummy data insert succeeded"
-puts ""
-
-puts "> User (user_id 1) JWT : #{generate_static_jwt(1, "user")}"
-puts "> Admin (user_id 2) JWT : #{generate_static_jwt(2, "admin")}"
 puts ""
