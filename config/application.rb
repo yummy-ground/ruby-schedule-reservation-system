@@ -17,6 +17,8 @@ module ScheduleReservationApi
     config.autoload_lib(ignore: %w[assets tasks])
     config.autoload_paths += %W[#{config.root}/app/controllers/code]
     config.autoload_paths += %W[#{config.root}/app/controllers/filter]
+    config.autoload_paths += %W[#{config.root}/app/controllers/dto]
+    config.autoload_paths += %W[#{config.root}/app/controllers/utils]
 
     # Configuration for the application, engines, and railties goes here.
     #
