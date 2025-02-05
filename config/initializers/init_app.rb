@@ -4,6 +4,7 @@ if Rails.env.development?
   Rails.application.config.after_initialize do
     Rails.application.load_tasks
     unless ActiveRecord::Base.connection.data_source_exists?("schema_migrations")
+      Rake::Task["db:drop"].invoke
       Rake::Task["db:create"].invoke
       Rake::Task["db:migrate"].invoke
     end
