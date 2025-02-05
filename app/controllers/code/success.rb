@@ -14,4 +14,3 @@ module Success
   DELETE_RESERVATION = SuccessData.new(status_code: 204, message: "예약 삭제를 성공했습니다.")
   CONFIRM_RESERVATION = SuccessData.new(status_code: 204, message: "예약 확정을 성공했습니다.")
 end
-

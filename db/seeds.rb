@@ -29,7 +29,7 @@ Schedule.create!([
                    { id: 6, user_id: 3, personnel: 10000, start_datetime: "2025-02-24 08:00:00", end_datetime: "2025-02-24 16:00:00", is_confirm: false, name: "User 3 - Schedule 3" },
                    { id: 7, user_id: 4, personnel: 10000, start_datetime: "2025-02-22 10:00:00", end_datetime: "2025-02-23 10:00:00", is_confirm: true, name: "User 4 - Schedule 1" },
                    { id: 8, user_id: 4, personnel: 10000, start_datetime: "2025-02-23 10:00:00", end_datetime: "2025-02-24 10:00:00", is_confirm: false, name: "User 4 - Schedule 2" },
-                   { id: 9, user_id: 4, personnel: 10000, start_datetime: "2025-02-24 10:00:00", end_datetime: "2025-02-25 10:00:00", is_confirm: true, name: "User 4 - Schedule 3" },
+                   { id: 9, user_id: 4, personnel: 10000, start_datetime: "2025-02-24 10:00:00", end_datetime: "2025-02-25 10:00:00", is_confirm: true, name: "User 4 - Schedule 3" }
                  ])
 puts "> Schedule dummy data insert succeeded"
 puts ""

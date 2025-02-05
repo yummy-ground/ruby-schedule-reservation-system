@@ -23,4 +23,3 @@ module Failure
   NOT_FOUND_USER =  FailureData.new(status_code: 404, message: "해당 유저를 찾을 수 없습니다.")
   NOT_FOUND_SCHEDULE =  FailureData.new(status_code: 404, message: "해당 예약 일정을 찾을 수 없습니다.")
 end
-
