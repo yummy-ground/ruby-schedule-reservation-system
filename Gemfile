@@ -50,4 +50,5 @@ group :development, :test do
   gem "jwt"
   gem "rswag", "~> 2.10", ">= 2.10.1"
   gem "rswag-specs", require: false
+  gem "rspec-rails", require: false
 end
