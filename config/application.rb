@@ -16,6 +16,7 @@ module ScheduleReservationApi
     # Common ones are `templates`, `generators`, or `middleware`, for example.
     config.autoload_lib(ignore: %w[assets tasks])
     config.autoload_paths += %W[#{config.root}/app/controllers/code]
+    config.autoload_paths += %W[#{config.root}/app/controllers/filter]
 
     # Configuration for the application, engines, and railties goes here.
     #
