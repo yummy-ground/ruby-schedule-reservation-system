@@ -5,6 +5,8 @@ module Failure
   NO_TOKEN_IN_HEADER = FailureData.new(status_code: 400, message: "인증 토큰이 없습니다.")
   INVALID_PARAMETER = FailureData.new(status_code: 400, message: "잘못된 파라미터 값입니다.")
   IMPOSSIBLE_CREATE_TOO_LATE = FailureData.new(status_code: 400, message: "시작 전 3일 이내에는 예약이 불가능합니다.")
+  IMPOSSIBLE_UPDATE_NOT_OWNER = FailureData.new(status_code: 400, message: "다른 사용자의 예약 수정은 불가능합니다.")
+  IMPOSSIBLE_DELETE_NOT_OWNER = FailureData.new(status_code: 400, message: "다른 사용자의 예약 삭제는 불가능합니다.")
   IMPOSSIBLE_UPDATE_ALREADY_CONFIRM = FailureData.new(status_code: 400, message: "이미 확정된 예약은 수정이 불가능합니다.")
   IMPOSSIBLE_DELETE_ALREADY_CONFIRM = FailureData.new(status_code: 400, message: "이미 확정된 예약은 삭제가 불가능합니다.")
   OVER_PERSONNEL_TO_RESERVE = FailureData.new(status_code: 400, message: "최대 인원 초과로 예약이 불가능합니다.")
