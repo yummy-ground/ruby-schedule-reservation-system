@@ -6,19 +6,18 @@ class Schedule < ApplicationRecord
   scope :unconfirmed, -> { where(is_confirm: false) }
 
   validates :name, presence: true
-  validates :personnel, presence: true, numericality: { only_integer: true }
+  validates :personnel, presence: true, numericality: { only_integer: true, less_than_or_equal_to: PERSONNEL_LIMIT }
   validates :start_datetime, presence: true
   validates :end_datetime, presence: true
   validates :is_confirm, inclusion: { in: [ true, false ] }
 
-  validate :verify_personnel
   validate :verify_start_datetime
   validate :verify_end_datetime
 
   # attr_reader :id, :name, :user_id, :personnel, :start_datetime, :end_datetime, :is_confirm
 
-  def is_reserver?(user)
-    self.user.eql? user
+  def is_owner?(user_id)
+    self.user_id.eql? user_id
   end
 
   def start_at
@@ -29,12 +28,6 @@ class Schedule < ApplicationRecord
   end
 
   private
-
-  def verify_personnel
-    if personnel.present? && personnel > PERSONNEL_LIMIT
-      errors.add(:personnel, "can't be bigger than 50,000")
-    end
-  end
 
   def verify_start_datetime
     if start_datetime.present? && Time.now + 3.days > start_datetime.to_time
