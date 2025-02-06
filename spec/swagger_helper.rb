@@ -1,33 +1,43 @@
-# frozen_string_literal: true
-
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.configure do |config|
-  # Specify a root folder where Swagger JSON files are generated
-  # NOTE: If you're using the rswag-api to serve API descriptions, you'll need
-  # to ensure that it's configured to serve Swagger from the same folder
-  config.openapi_root = Rails.root.join('swagger').to_s
+  config.openapi_root = Rails.root.join("swagger").to_s
 
-  # Define one or more Swagger documents and provide global metadata for each one
-  # When you run the 'rswag:specs:swaggerize' rake task, the complete Swagger will
-  # be generated at the provided relative path under openapi_root
-  # By default, the operations defined in spec files are added to the first
-  # document below. You can override this behavior by adding a openapi_spec tag to the
-  # the root example_group in your specs, e.g. describe '...', openapi_spec: 'v2/swagger.json'
   config.openapi_specs = {
-    'v1/swagger.yaml' => {
-      openapi: '3.0.1',
+    "v1/swagger.yaml" => {
+      openapi: "3.0.1",
       info: {
-        title: 'API V1',
-        version: 'v1'
+        title: "시험 일정 예약 시스템 API",
+        description: "고객과 어드민이 각각의 필요에 맞게 시험 일정 예약을 처리할 수 있는 <strong>일정 예약 시스템 API</strong>입니다.</br>콘솔창에 발급받은 권한별 토큰을 활용해주세요.",
+        version: "v1"
+      },
+      components: {
+        securitySchemes: {
+          bearer_auth: {
+            type: :http,
+            scheme: :bearer,
+            bearerFormat: "JWT"
+          }
+        }
+      },
+      security: {
+        Bearer: {}
       },
       paths: {},
       servers: [
         {
-          url: 'https://{defaultHost}',
+          url: "http://{defaultDNSLocalHost}",
           variables: {
-            defaultHost: {
-              default: 'www.example.com'
+            defaultDNSLocalHost: {
+              default: "localhost:8080"
+            }
+          }
+        },
+        {
+          url: "http://{defaultLocalHost}",
+          variables: {
+            defaultLocalHost: {
+              default: "127.0.0.1:8080"
             }
           }
         }
@@ -35,9 +45,6 @@ RSpec.configure do |config|
     }
   }
 
-  # Specify the format of the output Swagger file when running 'rswag:specs:swaggerize'.
-  # The openapi_specs configuration option has the filename including format in
-  # the key, this may want to be changed to avoid putting yaml in json files.
-  # Defaults to json. Accepts ':json' and ':yaml'.
   config.openapi_format = :yaml
+
 end
