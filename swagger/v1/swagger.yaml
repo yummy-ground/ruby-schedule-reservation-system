@@ -1,11 +1,386 @@
 ---
 openapi: 3.0.1
 info:
-  title: API V1
+  title: 시험 일정 예약 시스템 API
+  description: 고객과 어드민이 각각의 필요에 맞게 시험 일정 예약을 처리할 수 있는 <strong>일정 예약 시스템 API</strong>입니다.</br>콘솔창에
+    발급받은 권한별 토큰을 활용해주세요.
   version: v1
-paths: {}
+components:
+  securitySchemes:
+    bearer_auth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    errors_object:
+      type: object
+      properties:
+        message:
+          type: string
+        data:
+          type: nil
+    schedule_content:
+      type: object
+      properties:
+        name:
+          type: string
+        start_at:
+          type: string
+          format: "%Y-%m-%d %H:%M"
+        end_datetime:
+          type: string
+          format: "%Y-%m-%d %H:%M"
+        personnel:
+          type: integer
+          required: true
+      required:
+      - name
+      - start_at
+      - end_at
+      - personnel
+    schedule_availables:
+      type: object
+      properties:
+        message:
+          type: string
+        data:
+          type: object
+          properties:
+            available:
+              type: array
+              items:
+                type: object
+                properties:
+                  date:
+                    type: string
+                    format: "%Y-%m-%d"
+                  time:
+                    type: string
+                    format: "%H"
+                  personnel:
+                    type: integer
+    schedules:
+      type: object
+      properties:
+        message:
+          type: string
+        data:
+          type: object
+          properties:
+            schedules:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+                  start_at:
+                    type: string
+                    format: "%Y-%m-%d %H:%M"
+                  end_at:
+                    type: string
+                    format: "%Y-%m-%d %H:%M"
+                  is_confirmed:
+                    type: boolean
+    schedule:
+      type: object
+      properties:
+        message:
+          type: string
+        data:
+          type: object
+          properties:
+            id:
+              type: integer
+            user_id:
+              type: integer
+            name:
+              type: string
+            personnel:
+              type: integer
+            start_at:
+              type: string
+              format: "%Y-%m-%d %H:%M"
+            end_at:
+              type: string
+              format: "%Y-%m-%d %H:%M"
+            is_confirmed:
+              type: boolean
+security:
+  Bearer: {}
+paths:
+  "/schedules":
+    get:
+      summary: 예약 전체 조회
+      tags:
+      - Schedules
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/schedules"
+        '400':
+          description: Bad Request - No Token
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/errors_object"
+        '401':
+          description: Not authorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/errors_object"
+        '404':
+          description: Not found User
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/errors_object"
+    post:
+      summary: 예약 생성
+      tags:
+      - Schedules
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '201':
+          description: Success
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/schedule"
+        '400':
+          description: Bad Request - Invalid Parameter
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/errors_object"
+        '401':
+          description: Not authorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/errors_object"
+        '404':
+          description: Not found User
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/errors_object"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/schedule_content"
+  "/schedules/available":
+    get:
+      summary: 예약 가능 시간대 & 인원수 조회
+      tags:
+      - Schedules
+      security:
+      - bearer_auth: []
+      parameters:
+      - name: target_month
+        in: query
+        schema:
+          type: string
+          format: yyyy-MM
+          example: 2025-02
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/schedule_availables"
+        '400':
+          description: Bad Request - No Token
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/errors_object"
+        '401':
+          description: Not authorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/errors_object"
+        '404':
+          description: Not found User
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/errors_object"
+  "/schedules/{id}":
+    get:
+      summary: 예약 상세 조회
+      tags:
+      - Schedules
+      security:
+      - bearer_auth: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/schedule"
+        '400':
+          description: Bad Request - No Token
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/errors_object"
+        '401':
+          description: Not authorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/errors_object"
+        '404':
+          description: Not found Schedule
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/errors_object"
+    put:
+      summary: 예약 수정
+      tags:
+      - Schedules
+      security:
+      - bearer_auth: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '204':
+          description: Success
+        '400':
+          description: Bad Request - Already Confirm
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/errors_object"
+        '401':
+          description: Not authorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/errors_object"
+        '403':
+          description: No Permission (No Admin && No Owner)
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/errors_object"
+        '404':
+          description: Not found Schedule
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/errors_object"
+    delete:
+      summary: 예약 삭제
+      tags:
+      - Schedules
+      security:
+      - bearer_auth: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '204':
+          description: Success
+        '400':
+          description: Bad Request - Already Confirm
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/errors_object"
+        '401':
+          description: Not authorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/errors_object"
+        '403':
+          description: No Permission (No Admin && No Owner)
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/errors_object"
+        '404':
+          description: Not found Schedule
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/errors_object"
+  "/schedules/{id}/confirm":
+    patch:
+      summary: 예약 확정
+      tags:
+      - Schedules
+      security:
+      - bearer_auth: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '204':
+          description: Success
+        '400':
+          description: Bad Request - No Token
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/errors_object"
+        '401':
+          description: Not authorized
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/errors_object"
+        '403':
+          description: No Permission (No Admin)
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/errors_object"
+        '404':
+          description: Not found Schedule
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/errors_object"
 servers:
-- url: https://{defaultHost}
+- url: http://{defaultDNSLocalHost}
   variables:
-    defaultHost:
-      default: www.example.com
+    defaultDNSLocalHost:
+      default: localhost:8080
+- url: http://{defaultLocalHost}
+  variables:
+    defaultLocalHost:
+      default: 127.0.0.1:8080

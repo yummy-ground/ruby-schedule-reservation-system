@@ -1,5 +1,6 @@
 require "rails_helper"
 
+
 RSpec.configure do |config|
   config.openapi_root = Rails.root.join("swagger").to_s
 
@@ -17,6 +18,89 @@ RSpec.configure do |config|
             type: :http,
             scheme: :bearer,
             bearerFormat: "JWT"
+          }
+        },
+        schemas: {
+          errors_object: {
+            type: :object,
+            properties: {
+              message: { type: :string },
+              data: {  type: :nil }
+            }
+          },
+          schedule_content: {
+            type: :object,
+            properties: {
+              name: { type: :string },
+              start_at: { type: :string, format: "%Y-%m-%d %H:%M" },
+              end_datetime: { type: :string, format: "%Y-%m-%d %H:%M" },
+              personnel: { type: :integer, required: true }
+            },
+            required: %w[name start_at end_at personnel]
+          },
+          schedule_availables: {
+            type: :object,
+            properties: {
+              message: { type: :string },
+              data: {
+                type: :object,
+                properties: {
+                  available: {
+                    type: :array,
+                    items: {
+                      type: :object,
+                      properties: {
+                        date: { type: :string, format: "%Y-%m-%d" },
+                        time: { type: :string, format: "%H" },
+                        personnel: { type: :integer }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          schedules: {
+            type: :object,
+            properties: {
+              message: { type: :string },
+              data: {
+                type: :object,
+                properties: {
+                  schedules: {
+                    type: :array,
+                    items: {
+                      type: :object,
+                      properties: {
+                        id: { type: :integer },
+                        name: { type: :string },
+                        start_at: { type: :string, format: "%Y-%m-%d %H:%M" },
+                        end_at: { type: :string, format: "%Y-%m-%d %H:%M" },
+                        is_confirmed: { type: :boolean }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          schedule: {
+            type: :object,
+            properties: {
+              message: { type: :string },
+              data: {
+                type: :object,
+                properties: {
+                  id: { type: :integer },
+                  user_id: { type: :integer },
+                  name: { type: :string },
+                  personnel: { type: :integer },
+                  start_at: { type: :string, format: "%Y-%m-%d %H:%M" },
+                  end_at: { type: :string, format: "%Y-%m-%d %H:%M" },
+                  is_confirmed: { type: :boolean }
+                }
+              }
+            }
           }
         }
       },
@@ -46,5 +130,4 @@ RSpec.configure do |config|
   }
 
   config.openapi_format = :yaml
-
 end
