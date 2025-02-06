@@ -150,8 +150,8 @@
 <br/>
 
 ## API Documentation
-Swagger를 통해 API 문서를 제공합니다.
-위 [Run Locally](#run-locally)를 참고하여 로컬 환경에서 []()에 접속하면 확인할 수 있습니다.
+Swagger를 통해 API 문서를 제공합니다.<br/>
+위 [Run Locally](#run-locally)를 참고하여 로컬 환경에서 어플리케이션을 실행시킨 후, [http://localhost:8080/api-docs](http://localhost:8080/api-docs)에 접속하면 확인할 수 있습니다.
 
 <br/>
 
