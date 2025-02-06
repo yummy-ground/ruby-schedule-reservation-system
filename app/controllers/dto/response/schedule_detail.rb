@@ -6,8 +6,9 @@ class ScheduleDetail
     @user_id = schedule.user.id
     @name = schedule.name
     @personnel = schedule.personnel
-    @start_time = schedule.start_at
-    @end_time = schedule.end_at
+    @start_at = schedule.start_at
+    @end_at = schedule.end_at
+    @is_confirmed = schedule.is_confirm
   end
   def to_json(* args)
     {
@@ -15,8 +16,9 @@ class ScheduleDetail
       user_id: @user_id,
       name: @name,
       personnel: @personnel,
-      start_at: @start_time,
-      end_at: @end_time
+      start_at: @start_at,
+      end_at: @end_at,
+      is_confirmed: @is_confirmed
     }.to_json
   end
 end
