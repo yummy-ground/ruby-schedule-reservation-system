@@ -1,7 +1,8 @@
 require "active_support/core_ext/integer/time"
 
 Rails.application.configure do
-  config.middleware.use JwtAuthFilter
+  require_relative "../../app/controllers/filter/jwt_auth_filter"
+  config.middleware.use Filter::JwtAuthFilter
 
   config.enable_reloading = true
   config.eager_load = false
