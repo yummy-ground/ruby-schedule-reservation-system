@@ -11,7 +11,7 @@ module Filter
       request = Rack::Request.new(env)
       token = request.get_header("HTTP_AUTHORIZATION")&.split(" ")&.last
 
-      unless request.url.include? "/api-docs"
+      unless should_not_filter(request)
         if token.nil?
           return [
             Failure::NO_TOKEN_IN_HEADER.status_code,
@@ -21,7 +21,7 @@ module Filter
         else
           begin
             validate_jwt(env, token)
-          rescue JWT::ExpiredSignature => e
+          rescue JWT::DecodeError => e
             return [
               Failure::INVALID_TOKEN_IN_HEADER.status_code,
               { "Content-Type" => "application/json" },
@@ -38,6 +38,10 @@ module Filter
       payload, = JWT.decode(token, ENV["JWT_SECRET"], true, { algorithm: "HS256" })
       env["user_id"] = payload["id"]
       env["user_role"] = payload["role"]
+    end
+
+    def should_not_filter(request)
+      request.url.include? "/api-docs"
     end
   end
 end

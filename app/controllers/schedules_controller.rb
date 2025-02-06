@@ -16,7 +16,7 @@ class SchedulesController < ApplicationController
   # 예약 내역 조회
   def index
     result = @schedules.map do |schedule| ScheduleSimple.new(schedule) end
-    render json: BaseResponse.of_success(Success::GET_RESERVATION_ALL, result).to_json,
+    render json: BaseResponse.of_success(Success::GET_RESERVATION_ALL, { schedules: result }).to_json,
            status: Success::GET_RESERVATION_DETAIL.status_code
   end
 
@@ -28,8 +28,8 @@ class SchedulesController < ApplicationController
     confirmed_schedules = Schedule.confirmed.where(start_datetime: start_date..end_date)
 
     available_times = calculate_available_times(confirmed_schedules, start_date, end_date)
-
-    render json: BaseResponse.of_success(Success::GET_RESERVATION_AVAILABILITY_TIME, available_times.map { |datetime, personnel| ScheduleAvailable.new(datetime, personnel) }).to_json,
+    result = available_times.map { |datetime, personnel| ScheduleAvailable.new(datetime, personnel) }
+    render json: BaseResponse.of_success(Success::GET_RESERVATION_AVAILABILITY_TIME, { availables: result }).to_json,
            status: Success::GET_RESERVATION_AVAILABILITY_TIME.status_code
   rescue ArgumentError
     render json: BaseResponse.of_failure(Failure::INVALID_PARAMETER).to_json,
@@ -44,7 +44,7 @@ class SchedulesController < ApplicationController
                   status: Failure::OVER_PERSONNEL_TO_RESERVE.status_code if exceeds_personnel?
 
     schedule = @current_user.schedules.create!(schedule_content)
-    render json: BaseResponse.of_success(Success::CREATE_RESERVATION, schedule).to_json,
+    render json: BaseResponse.of_success(Success::CREATE_RESERVATION, ScheduleDetail.new(schedule)).to_json,
            status: Success::CREATE_RESERVATION.status_code
   end
 
