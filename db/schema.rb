@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_02_05_082413) do
+ActiveRecord::Schema[8.0].define(version: 2025_02_06_051222) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -19,7 +19,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_05_082413) do
     t.integer "personnel", null: false
     t.datetime "start_datetime", null: false
     t.datetime "end_datetime", null: false
-    t.boolean "is_confirm", default: true, null: false
+    t.boolean "is_confirm", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "name"
