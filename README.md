@@ -113,8 +113,7 @@
 
 - **Docker 사용** 시 (Docker Compose ❌)
   - 기존 Local에 동일한 이름의 컨테이너가 있는지 확인이 필요합니다.
-  - `.env` 파일을 최대한 프로젝트 root에 위치시켜주세요.
-    - 만약 `.env` 파일 path는 해당 파일을 다운로드 받은 경로를 입력해야 합니다.
+  - `.env` 파일을 프로젝트 root에 위치시켜주세요.
   - 단일 어플리케이션을 위한 단일 데이터베이스 컨테이너이기 때문에 `--link`를 사용합니다.
   ```shell
   docker volume create postgres_data
@@ -122,29 +121,31 @@
   # 변수 내부 내용은 직접 입력해주세요.
   # DB Container
   docker run -d --name app_db --network app_network \
-      -e POSTGRES_USER=${DB_USERNAME} \ 
-      -e POSTGRES_PASSWORD=${DB_PASSWORD} \
-      -e POSTGRES_DB=schedule_reservation_system \
-      -p 5432:5432 \
-      -v postgres_data:/var/lib/postgresql/data \
-      postgres
+    -e POSTGRES_USER=${DB_USERNAME} \ 
+    -e POSTGRES_PASSWORD=${DB_PASSWORD} \
+    -e POSTGRES_DB=schedule_reservation_system \
+    -p 5432:5432 \
+    -v postgres_data:/var/lib/postgresql/data \
+    postgres:latest
   
   # Ruby API Application Container
-  # 프로젝트 root 위치에 .env 파일이 있다면 해당 파라미터는 생략해도 괜찮습니다.
-  docker build --build-args ENV_FILE_PATH=${ENV_FILE_PATH} -t app .
+  docker build -t app .
   docker run -d --name app --network app_network \
-      -e DB_NAME=schedule_reservation_system \
-      -e DB_USERNAME=${DB_USERNAME} \
-      -e DB_PASSWORD=${DB_PASSWORD} \
-      -e DB_HOST=app_db \
-      -p 8080:8080 \
-      -w /app \
-      app
+    -e DB_NAME=schedule_reservation_system \
+    -e DB_USERNAME=${DB_USERNAME} \
+    -e DB_PASSWORD=${DB_PASSWORD} \
+    -e DB_HOST=app_db \
+    -p 8080:8080 \
+    -w /app \
+    app
   ```
 - **Docker 사용** 시 (Docker Compose ✅)
+  - 기존 Local에 동일한 이름의 컨테이너가 있는지 확인이 필요합니다.
+  - `.env` 파일을 프로젝트 root에 위치시켜주세요.
+  - 단일 어플리케이션을 위한 단일 데이터베이스 컨테이너이기 때문에 `--link`를 사용합니다.
   ```shell
   # 프로젝트 root 위치에 .env 파일이 있다면 ENV_FILE_PATH 파라미터는 생략해도 괜찮습니다.
-  DB_USERNAME=${DB_USERNAME} DB_PASSWORD=${DB_PASSWORD} ENV_FILE_PATH={ENV_FILE_PATH} docker compose up -d --build
+  DB_USERNAME=${DB_USERNAME} DB_PASSWORD=${DB_PASSWORD} docker compose up -d --build
   ```
 
 <br/>

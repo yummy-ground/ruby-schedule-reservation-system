@@ -17,8 +17,6 @@ services:
   app:
     build:
       context: .
-      args:
-        ENV_FILE_PATH: ${ENV_FILE_PATH}
     container_name: schedule_reservation_system
     restart: always
     depends_on:

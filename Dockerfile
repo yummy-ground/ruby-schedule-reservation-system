@@ -1,9 +1,6 @@
 ARG RUBY_VERSION=3.2.2
 FROM docker.io/library/ruby:$RUBY_VERSION-slim AS base
 
-ARG ENV_FILE_PATH=.env
-COPY $ENV_FILE_PATH .env
-
 WORKDIR /app
 
 COPY . /app
