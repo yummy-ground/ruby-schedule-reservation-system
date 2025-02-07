@@ -151,8 +151,227 @@
 <br/>
 
 ## API Documentation
-Swagger를 통해 API 문서를 제공합니다.<br/>
+Swagger를 통한 API 문서도 함께 제공합니다.<br/>
 위 [Run Locally](#run-locally)를 참고하여 로컬 환경에서 어플리케이션을 실행시킨 후, [http://localhost:8080/api-docs](http://localhost:8080/api-docs)에 접속하면 확인할 수 있습니다.
+
+아래 API는 모두 권한별 토큰(JWT)을 활용하여 API를 호출해야 합니다.
+
+### Authorization
+모든 요청은 Bearer Token 인증을 필요로 합니다. `Authorization` 헤더에 `Bearer {JWT}` 형식으로 토큰을 포함해야 합니다.
+
+### APIs
+
+#### 1. 예약 전체 조회
+- **Method**: `GET`
+- **Endpoint**: `/schedules`
+- **요청 헤더**:
+  - `Authorization`: Bearer Token (필수)
+- **응답 예시**:
+```json
+{
+  "message": "Success",
+  "data": {
+    "schedules": [
+      {
+        "id": 1,
+        "name": "시험 일정 1",
+        "start_at": "2025-02-10 10:00",
+        "end_at": "2025-02-10 12:00",
+        "is_confirmed": true
+      }
+    ]
+  }
+}
+```
+- **응답 코드**:
+  - `200`: 성공
+  - `400`: 토큰 없음
+  - `401`: 인증 실패
+  - `404`: 사용자 없음
+
+<br/>
+
+#### 2. 예약 생성
+- **Method**: `POST`
+- **Endpoint**: `/schedules`
+- **요청 헤더**:
+  - `Authorization`: Bearer Token (필수)
+- **요청 본문 예시**:
+```json
+{
+  "name": "시험 일정 1",
+  "start_at": "2025-02-10 10:00",
+  "end_at": "2025-02-10 12:00",
+  "personnel": 10
+}
+```
+- **응답 예시**:
+```json
+{
+  "message": "Success",
+  "data": {
+    "id": 1,
+    "user_id": 1001,
+    "name": "시험 일정 1",
+    "personnel": 10,
+    "start_at": "2025-02-10 10:00",
+    "end_at": "2025-02-10 12:00",
+    "is_confirmed": false
+  }
+}
+```
+- **응답 코드**:
+  - `201`: 성공
+  - `400`: 잘못된 요청
+  - `401`: 인증 실패
+  - `404`: 사용자 없음
+
+<br/>
+
+#### 3. 예약 가능 시간 조회
+- **Method**: `GET`
+- **Endpoint**: `/schedules/available`
+- **요청 헤더**:
+  - `Authorization`: Bearer Token (필수)
+- **요청 파라미터**:
+  - `target_month`: 조회할 달 (예: `2025-02`)
+- **응답 예시**:
+```json
+{
+  "message": "Success",
+  "data": {
+    "available": [
+      {
+        "date": "2025-02-10",
+        "time": "10",
+        "personnel": 5
+      }
+    ]
+  }
+}
+```
+- **응답 코드**:
+  - `200`: 성공
+  - `400`: 토큰 없음
+  - `401`: 인증 실패
+  - `404`: 사용자 없음
+
+<br/>
+
+#### 4. 예약 상세 조회
+- **Method**: `GET`
+- **Endpoint**: `/schedules/{id}`
+- **요청 헤더**:
+  - `Authorization`: Bearer Token (필수)
+- **응답 예시**:
+```json
+{
+  "message": "Success",
+  "data": {
+    "id": 1,
+    "user_id": 1001,
+    "name": "시험 일정 1",
+    "personnel": 10,
+    "start_at": "2025-02-10 10:00",
+    "end_at": "2025-02-10 12:00",
+    "is_confirmed": false
+  }
+}
+```
+- **응답 코드**:
+  - `200`: 성공
+  - `400`: 토큰 없음
+  - `401`: 인증 실패
+  - `404`: 일정 없음
+
+<br/>
+
+#### 5. 예약 수정
+- **Method**: `PUT`
+- **Endpoint**: `/schedules/{id}`
+- **요청 헤더**:
+  - `Authorization`: Bearer Token (필수)
+- **응답 코드**:
+  - `204`: 성공
+  - `400`: 이미 확정된 일정
+  - `401`: 인증 실패
+  - `403`: 권한 없음
+  - `404`: 일정 없음
+
+<br/>
+
+#### 6. 예약 삭제
+- **Method**: `DELETE`
+- **Endpoint**: `/schedules/{id}`
+- **요청 헤더**:
+  - `Authorization`: Bearer Token (필수)
+- **응답 코드**:
+  - `204`: 성공
+  - `400`: 이미 확정된 일정
+  - `401`: 인증 실패
+  - `403`: 권한 없음
+  - `404`: 일정 없음
+
+<br/>
+
+#### 7. 예약 확정
+- **Method**: `PATCH`
+- **Endpoint**: `/schedules/{id}/confirm`
+- **요청 헤더**:
+  - `Authorization`: Bearer Token (필수)
+    - **Only Admin**
+- **응답 코드**:
+  - `204`: 성공
+  - `400`: 토큰 없음
+  - `401`: 인증 실패
+  - `403`: 관리자 권한 없음
+  - `404`: 일정 없음
+
+<br/>
+
+#### ※ 공통 테이터 응답
+```json
+{
+  // 단일 데이터
+  "message": "Success message",
+  "data": {
+    "Field Name" : ...
+  }
+  
+  // 복수(배열) 데이터
+  "message": "Success message",
+  "data": {
+    "List Data Name" : [
+      {
+        "Field Name" : ...
+      },{
+        "Field Name" : ...
+      }
+    ]
+  }
+}
+```
+- **응답 코드 및 의미**
+  - `400`: 잘못된 요청
+  - `401`: 인증 실패
+  - `403`: 권한 없음
+  - `404`: 리소스 없음
+
+<br/>
+
+#### ※ 공통 에러 응답
+```json
+{
+  "message": "Error message",
+  "data": null
+}
+```
+- **응답 코드 및 의미**
+  - `400`: 잘못된 요청
+  - `401`: 인증 실패
+  - `403`: 권한 없음
+  - `404`: 리소스 없음
+
 
 <br/>
 
